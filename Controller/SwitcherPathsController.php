@@ -29,17 +29,25 @@ class SwitcherPathsController extends SwitcherAppController {
 	}
 
 /**
- * admin_view method
+ * view method. Allows easy previewing of layouts
  *
  * @param string $id
  * @return void
  */
-	public function admin_view($id = null) {
+	public function view($id = null) {
 		$this->SwitcherPath->id = $id;
 		if (!$this->SwitcherPath->exists()) {
 			throw new NotFoundException(__('Invalid switcher path'));
 		}
-		$this->set('switcherPath', $this->SwitcherPath->read(null, $id));
+		$switcherPath = $this->SwitcherPath->read(null, $id);
+		$fakeNode = array(
+			'CustomFields' => array(
+				'switcher_theme' => $switcherPath['SwitcherPath']['theme'],
+				'switcher_layout' => $switcherPath['SwitcherPath']['layout']
+			)
+		);
+		$this->set('node', $fakeNode);
+		$this->set('switcherPath', $switcherPath);
 	}
 
 /**
